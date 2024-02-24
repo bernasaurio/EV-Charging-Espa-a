@@ -13,12 +13,14 @@ import xlrd
 import xmltodict
 
 
-class EV_Charger:
+class ev_chargers:
     """ 
-    Class to download files from DGT
+    Class to download files from REE 
     """
     def __init__(self):
+        
         pd.set_option("display.max_rows", None, "display.max_columns", None)
+
 
     def api_call_method (self):
         '''performs the API call'''
@@ -36,12 +38,17 @@ class EV_Charger:
         data = r.text
 
         data_parsed = xmltodict.parse(data)
+
         data_parsed = data_parsed['d2:payload']['egi:energyInfrastructureTable']['egi:energyInfrastructureSite']
+
+
         return data_parsed
+
 
     def data_processing (self):
 
         dict_data = self.api_call_method()
+
         empty_list = []
 
         for i in dict_data:
@@ -53,16 +60,15 @@ class EV_Charger:
         final = pd.concat(empty_list,axis=0,join='outer')
 
         return final
-        
 
     def ev_dataframe (self):
             return self.data_processing()
         
 
 
-ev_class = EV_Charger()
+# ev_class = EV_Charger()
 
-dataframe = ev_class.ev_dataframe()  
+# dataframe = ev_class.ev_dataframe()  
 
 
 

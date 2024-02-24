@@ -34,7 +34,7 @@ class EV_Charger:
 
         print('Request Status '+str(r.status_code))
         print(r.headers['content-type'])
-        print(r.text)
+        # print(r.text)
         data = r.text
 
         data_parsed = xmltodict.parse(data)
@@ -52,13 +52,14 @@ print('-------------------------Space-------------------------')
 
 dict_data = x['d2:payload']['egi:energyInfrastructureTable']['egi:energyInfrastructureSite']
 
+
+
 for i in dict_data:
-    print(i)
+    # print(i.items())
+    flat = pd.json_normalize(i)
+    print(flat)
 
 
-# for x, y in dict_data.items():
-#     print(x, y)
 
 
-keysdic = list(x)
-
+dataframe = pd.DataFrame(dict_data)

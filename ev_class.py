@@ -24,6 +24,12 @@ class ev_chargers:
 
     def api_call_method (self):
         '''performs the API call'''
+
+        global data_parsed
+
+        global data_parsed_v1
+        global data_parsed_v2
+
         
         url = 'https://infocar.dgt.es/datex2/v3/miterd/EnergyInfrastructureTablePublication/electrolineras.xml'
     
@@ -39,34 +45,24 @@ class ev_chargers:
 
         data_parsed = xmltodict.parse(data)
 
-        data_parsed = data_parsed['d2:payload']['egi:energyInfrastructureTable']['egi:energyInfrastructureSite']
+        print(data)
 
+        data_parsed_v2 = pd.json_normalize(data_parsed,record_path=['d2:payload','egi:energyInfrastructureTable','egi:energyInfrastructureSite'])
 
         return data_parsed
-
-
-    def data_processing (self):
-
-        dict_data = self.api_call_method()
-
-        empty_list = []
-
-        for i in dict_data:
-            # print(i.items())
-            flat = pd.json_normalize(i)
-            print(flat)
-            empty_list.append(flat)
-
-        final = pd.concat(empty_list,axis=0,join='outer')
-
-        return final
 
     def ev_dataframe (self):
             return self.data_processing()
         
 
 
-# ev_class = EV_Charger()
+ev_class = ev_chargers()
+
+
+dataframe = ev_class.api_call_method()  
+
+# dataframe = ev_class.data_processing()  
+
 
 # dataframe = ev_class.ev_dataframe()  
 
